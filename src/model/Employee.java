@@ -1,6 +1,6 @@
-package model;
+// src/model/Employee.java
 
-import java.sql.Date;
+package model;
 
 public class Employee {
     private int employeeId;
@@ -8,7 +8,7 @@ public class Employee {
     private String lastName;
     private String position;
     private double salary;
-    private Date dateOfJoining;
+    private String dateOfJoining;
     private String email;
     private String phoneNumber;
     private String address;
@@ -20,7 +20,7 @@ public class Employee {
 
     // Parameterized Constructor
     public Employee(int employeeId, String firstName, String lastName, String position, double salary,
-                    Date dateOfJoining, String email, String phoneNumber, String address,
+                    String dateOfJoining, String email, String phoneNumber, String address,
                     String emergencyContactName, String emergencyContactPhone) {
         this.employeeId = employeeId;
         this.firstName = firstName;
@@ -36,7 +36,6 @@ public class Employee {
     }
 
     // Getters and Setters
-
     public int getEmployeeId() {
         return employeeId;
     }
@@ -77,11 +76,11 @@ public class Employee {
         this.salary = salary;
     } 
 
-    public Date getDateOfJoining() {
+    public String getDateOfJoining() {
         return dateOfJoining;
     } 
 
-    public void setDateOfJoining(Date dateOfJoining) {
+    public void setDateOfJoining(String dateOfJoining) {
         this.dateOfJoining = dateOfJoining;
     } 
 

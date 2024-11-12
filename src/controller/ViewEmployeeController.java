@@ -1,3 +1,5 @@
+// src/controller/ViewEmployeeController.java
+
 package controller;
 
 import java.awt.event.ActionEvent;
@@ -12,21 +14,19 @@ public class ViewEmployeeController implements ActionListener {
     private ViewEmployeeView viewEmployeeView;
     private EmployeeDAO employeeDAO;
 
-    public ViewEmployeeController(ViewEmployeeView viewEmployeeView) {
+    public ViewEmployeeController(ViewEmployeeView viewEmployeeView, String password) {
         this.viewEmployeeView = viewEmployeeView;
-        this.employeeDAO = new EmployeeDAO();
-        // Register this controller as the listener for the view button
-        viewEmployeeView.addViewButtonListener(this);
+        this.employeeDAO = new EmployeeDAO(password);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String employeeIdStr = viewEmployeeView.getEmployeeId().trim();
+        String employeeIdStr = viewEmployeeView.getEmployeeId();
         int employeeId;
         try {
             employeeId = Integer.parseInt(employeeIdStr);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(viewEmployeeView.getPanel(), "Invalid Employee ID.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Invalid Employee ID.");
             return;
         }
 
@@ -44,7 +44,7 @@ public class ViewEmployeeController implements ActionListener {
                     + "Emergency Contact: " + emp.getEmergencyContactName() + " - " + emp.getEmergencyContactPhone();
             viewEmployeeView.setEmployeeDetails(details);
         } else {
-            JOptionPane.showMessageDialog(viewEmployeeView.getPanel(), "Employee not found.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Employee not found.");
             viewEmployeeView.setEmployeeDetails("");
         }
     }

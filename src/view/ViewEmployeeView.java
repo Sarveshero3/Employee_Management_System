@@ -1,83 +1,62 @@
+// src/view/ViewEmployeeView.java
+
 package view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import controller.ViewEmployeeController;
 
 public class ViewEmployeeView {
     private JPanel panel;
     private JTextField employeeIdField;
+    private JButton searchButton;
     private JTextArea employeeDetailsArea;
-    private JButton viewButton;
+    private String password;
 
-    public ViewEmployeeView() {
-        panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(245, 245, 245));
+    public ViewEmployeeView(String password) {
+        this.password = password;
+        panel = new JPanel();
+        panel.setLayout(new BorderLayout());
 
-        // Fonts
-        Font labelFont = new Font("Arial", Font.BOLD, 16);
-        Font fieldFont = new Font("Arial", Font.PLAIN, 16);
-        Font buttonFont = new Font("Arial", Font.BOLD, 16);
+        // Top panel for searching
+        JPanel searchPanel = new JPanel(new FlowLayout());
+        employeeIdField = new JTextField(15);
+        searchButton = new JButton("Search");
+        searchPanel.add(new JLabel("Employee ID:"));
+        searchPanel.add(employeeIdField);
+        searchPanel.add(searchButton);
 
-        // ID Input
-        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
-        inputPanel.setBackground(new Color(245, 245, 245));
-        JLabel idLabel = new JLabel("Employee ID:");
-        idLabel.setFont(labelFont);
-        employeeIdField = new JTextField(10);
-        employeeIdField.setFont(fieldFont);
-        viewButton = new JButton("View");
-        viewButton.setFont(buttonFont);
-        viewButton.setBackground(new Color(100, 149, 237));
-        viewButton.setForeground(Color.WHITE);
-        inputPanel.add(idLabel);
-        inputPanel.add(employeeIdField);
-        inputPanel.add(viewButton);
-
-        // Employee Details Display Area
-        employeeDetailsArea = new JTextArea(8, 30);
-        employeeDetailsArea.setFont(fieldFont);
+        // Center panel for displaying employee details
+        employeeDetailsArea = new JTextArea(15, 30);
         employeeDetailsArea.setEditable(false);
-        employeeDetailsArea.setBackground(new Color(240, 248, 255)); // Alice blue
         JScrollPane scrollPane = new JScrollPane(employeeDetailsArea);
 
-        panel.add(inputPanel, BorderLayout.NORTH);
+        // Add panels to main panel
+        panel.add(searchPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        // Add padding
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // Add action listener
+        ViewEmployeeController controller = new ViewEmployeeController(this, password);
+        searchButton.addActionListener(controller);
     }
-
-    // Getters and Setters
 
     public JPanel getPanel() {
         return panel;
     }
 
-    public JTextField getEmployeeIdField() {
-        return employeeIdField;
-    }
-
-    public JTextArea getEmployeeDetailsArea() {
-        return employeeDetailsArea;
-    }
-
-    public JButton getViewButton() {
-        return viewButton;
-    }
-
-    // Getter method to retrieve the entered Employee ID
     public String getEmployeeId() {
         return employeeIdField.getText();
     }
 
-    // Setter method to display employee details
+    public void setEmployeeId(String employeeId) {
+        this.employeeIdField.setText(employeeId);
+    }
+
     public void setEmployeeDetails(String details) {
         employeeDetailsArea.setText(details);
     }
 
-    // Method to add ActionListener to the view button
-    public void addViewButtonListener(ActionListener listener) {
-        viewButton.addActionListener(listener);
+    public String getEmployeeDetails() {
+        return employeeDetailsArea.getText();
     }
 }

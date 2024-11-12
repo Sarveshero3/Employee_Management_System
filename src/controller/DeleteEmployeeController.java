@@ -1,3 +1,5 @@
+// src/controller/DeleteEmployeeController.java
+
 package controller;
 
 import java.awt.event.ActionEvent;
@@ -12,9 +14,9 @@ public class DeleteEmployeeController implements ActionListener {
     private DeleteEmployeeView deleteEmployeeView;
     private EmployeeDAO employeeDAO;
 
-    public DeleteEmployeeController(DeleteEmployeeView deleteEmployeeView) {
+    public DeleteEmployeeController(DeleteEmployeeView deleteEmployeeView, String password) {
         this.deleteEmployeeView = deleteEmployeeView;
-        this.employeeDAO = new EmployeeDAO();
+        this.employeeDAO = new EmployeeDAO(password);
     }
 
     @Override

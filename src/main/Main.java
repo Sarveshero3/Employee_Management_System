@@ -1,8 +1,8 @@
+// src/main/Main.java
+
 package main;
 
-import view.LoadingScreen;
 import view.LoginView;
-
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -15,12 +15,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        // Launch Loading Screen
+        // Launch the application on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            LoadingScreen loadingScreen = new LoadingScreen();
-            loadingScreen.showLoading();
-
-            // Once loading is done, show the login screen
             LoginView loginView = new LoginView();
             loginView.setVisible(true);
         });

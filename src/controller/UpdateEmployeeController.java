@@ -1,101 +1,104 @@
+// src/controller/UpdateEmployeeController.java
+
 package controller;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import model.Employee;
 import model.EmployeeDAO;
 import view.UpdateEmployeeView;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JOptionPane;
 
-public class UpdateEmployeeController {
+public class UpdateEmployeeController implements ActionListener {
     private UpdateEmployeeView updateEmployeeView;
     private EmployeeDAO employeeDAO;
-    private Employee currentEmployee;
 
-    public UpdateEmployeeController(UpdateEmployeeView updateEmployeeView) {
+    public UpdateEmployeeController(UpdateEmployeeView updateEmployeeView, String password) {
         this.updateEmployeeView = updateEmployeeView;
-        this.employeeDAO = new EmployeeDAO();
-
-        // Register listeners
-        updateEmployeeView.addLoadButtonListener(new LoadButtonListener());
-        updateEmployeeView.addUpdateButtonListener(new UpdateButtonListener());
+        this.employeeDAO = new EmployeeDAO(password);
     }
 
-    // Listener for Load Button
-    private class LoadButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String actionCommand = e.getActionCommand();
+
+        if (actionCommand.equals("Search")) {
             String employeeIdStr = updateEmployeeView.getEmployeeId();
             int employeeId;
             try {
                 employeeId = Integer.parseInt(employeeIdStr);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(updateEmployeeView.getPanel(), "Invalid Employee ID.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalid Employee ID.");
                 return;
             }
 
-            currentEmployee = employeeDAO.getEmployeeById(employeeId);
-            if (currentEmployee != null) {
+            Employee emp = employeeDAO.getEmployeeById(employeeId);
+            if (emp != null) {
                 // Populate fields
-                updateEmployeeView.setPosition(currentEmployee.getPosition());
-                updateEmployeeView.setSalary(String.valueOf(currentEmployee.getSalary()));
-                updateEmployeeView.setPhoneNumber(currentEmployee.getPhoneNumber());
+                updateEmployeeView.setFirstName(emp.getFirstName());
+                updateEmployeeView.setLastName(emp.getLastName());
+                updateEmployeeView.setPosition(emp.getPosition());
+                updateEmployeeView.setSalary(String.valueOf(emp.getSalary()));
+                updateEmployeeView.setDateOfJoining(emp.getDateOfJoining());
+                updateEmployeeView.setEmail(emp.getEmail());
+                updateEmployeeView.setPhoneNumber(emp.getPhoneNumber());
+                updateEmployeeView.setAddress(emp.getAddress());
+                updateEmployeeView.setEmergencyContactName(emp.getEmergencyContactName());
+                updateEmployeeView.setEmergencyContactPhone(emp.getEmergencyContactPhone());
 
-                // Enable fields and update button
                 updateEmployeeView.setFieldsEditable(true);
-                updateEmployeeView.getUpdateButton().setEnabled(true);
+                updateEmployeeView.enableUpdateButton(true);
             } else {
-                JOptionPane.showMessageDialog(updateEmployeeView.getPanel(), "Employee not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Employee not found.");
             }
-        }
-    }
-
-    // Listener for Update Button
-    private class UpdateButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (currentEmployee == null) {
-                JOptionPane.showMessageDialog(updateEmployeeView.getPanel(), "No employee loaded.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Collect updated data
+        } else if (actionCommand.equals("Update Employee")) {
+            // Collect data
+            String firstName = updateEmployeeView.getFirstName();
+            String lastName = updateEmployeeView.getLastName();
             String position = updateEmployeeView.getPosition();
             String salaryStr = updateEmployeeView.getSalary();
+            String dateOfJoiningStr = updateEmployeeView.getDateOfJoining();
+            String email = updateEmployeeView.getEmail();
             String phoneNumber = updateEmployeeView.getPhoneNumber();
+            String address = updateEmployeeView.getAddress();
+            String emergencyContactName = updateEmployeeView.getEmergencyContactName();
+            String emergencyContactPhone = updateEmployeeView.getEmergencyContactPhone();
 
-            // Validate mandatory fields
-            if (position.isEmpty() || salaryStr.isEmpty()) {
-                JOptionPane.showMessageDialog(updateEmployeeView.getPanel(), "Please fill in all mandatory fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            // Input validation
+            if (firstName.isEmpty() || lastName.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "First Name and Last Name are required.");
                 return;
             }
 
-            // Convert salary to double
             double salary;
             try {
                 salary = Double.parseDouble(salaryStr);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(updateEmployeeView.getPanel(), "Invalid salary format.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Invalid salary format.");
                 return;
             }
 
-            // Update employee object
-            currentEmployee.setPosition(position);
-            currentEmployee.setSalary(salary);
-            currentEmployee.setPhoneNumber(phoneNumber);
+            // Update Employee object
+            Employee emp = new Employee();
+            emp.setEmployeeId(Integer.parseInt(updateEmployeeView.getEmployeeId()));
+            emp.setFirstName(firstName);
+            emp.setLastName(lastName);
+            emp.setPosition(position);
+            emp.setSalary(salary);
+            emp.setDateOfJoining(dateOfJoiningStr);
+            emp.setEmail(email);
+            emp.setPhoneNumber(phoneNumber);
+            emp.setAddress(address);
+            emp.setEmergencyContactName(emergencyContactName);
+            emp.setEmergencyContactPhone(emergencyContactPhone);
 
-            // Update employee in database
-            boolean success = employeeDAO.updateEmployeePartial(currentEmployee);
-
+            // Update employee in Excel file
+            boolean success = employeeDAO.updateEmployee(emp);
             if (success) {
-                JOptionPane.showMessageDialog(updateEmployeeView.getPanel(), "Employee updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                // Clear the form
-                updateEmployeeView.setFieldsEditable(false);
-                updateEmployeeView.getUpdateButton().setEnabled(false);
+                JOptionPane.showMessageDialog(null, "Employee updated successfully.");
             } else {
-                JOptionPane.showMessageDialog(updateEmployeeView.getPanel(), "Failed to update employee.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Failed to update employee.");
             }
         }
     }

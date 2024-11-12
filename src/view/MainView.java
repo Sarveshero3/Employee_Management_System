@@ -1,68 +1,83 @@
+// src/view/MainView.java
+
 package view;
 
 import javax.swing.*;
+import controller.MainController;
 import java.awt.*;
 
 public class MainView extends JFrame {
+    // Menu components
     private JMenuBar menuBar;
     private JMenu employeeMenu, reportMenu;
-    private JMenuItem addEmployeeItem, updateEmployeeItem, deleteEmployeeItem, viewEmployeeItem, salaryReportItem;
-    private JMenuItem positionCountReportItem, listAllEmployeesItem;
-    private JPanel contentPanel;
+    private JMenuItem addEmployeeItem, updateEmployeeItem, deleteEmployeeItem, viewEmployeeItem, listEmployeesItem;
+    private JMenuItem salaryReportItem, positionCountReportItem;
 
-    public MainView() {
+    // Other components (if needed)
+    private JPanel contentPanel;
+    private String password;
+
+    public MainView(String password) {
+        this.password = password;
         setTitle("Employee Management System");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        // Initialize the menu bar and menus
         menuBar = new JMenuBar();
-        setJMenuBar(menuBar);
-
         employeeMenu = new JMenu("Employee");
-        employeeMenu.setFont(new Font("Arial", Font.BOLD, 16));
-        menuBar.add(employeeMenu);
-
-        addEmployeeItem = new JMenuItem("Add Employee");
-        employeeMenu.add(addEmployeeItem);
-
-        updateEmployeeItem = new JMenuItem("Update Employee");
-        employeeMenu.add(updateEmployeeItem);
-
-        deleteEmployeeItem = new JMenuItem("Delete Employee");
-        employeeMenu.add(deleteEmployeeItem);
-
-        viewEmployeeItem = new JMenuItem("View Employee");
-        employeeMenu.add(viewEmployeeItem);
-
         reportMenu = new JMenu("Reports");
-        reportMenu.setFont(new Font("Arial", Font.BOLD, 16));
-        menuBar.add(reportMenu);
 
+        // Initialize menu items for Employee Menu
+        addEmployeeItem = new JMenuItem("Add Employee");
+        updateEmployeeItem = new JMenuItem("Update Employee");
+        deleteEmployeeItem = new JMenuItem("Delete Employee");
+        viewEmployeeItem = new JMenuItem("View Employee");
+        listEmployeesItem = new JMenuItem("List All Employees");
+
+        // Add menu items to Employee Menu
+        employeeMenu.add(addEmployeeItem);
+        employeeMenu.add(updateEmployeeItem);
+        employeeMenu.add(deleteEmployeeItem);
+        employeeMenu.add(viewEmployeeItem);
+        employeeMenu.add(listEmployeesItem);
+
+        // Initialize menu items for Report Menu
         salaryReportItem = new JMenuItem("Salary Report");
-        reportMenu.add(salaryReportItem);
+        positionCountReportItem = new JMenuItem("Position-wise Employee Count");
 
-        positionCountReportItem = new JMenuItem("Position Count Report");
+        // Add menu items to Report Menu
+        reportMenu.add(salaryReportItem);
         reportMenu.add(positionCountReportItem);
 
-        listAllEmployeesItem = new JMenuItem("List All Employees");
-        reportMenu.add(listAllEmployeesItem);
+        // Add menus to the menu bar
+        menuBar.add(employeeMenu);
+        menuBar.add(reportMenu);
 
-        // Initialize the main content panel
+        // Set the menu bar for the frame
+        setJMenuBar(menuBar);
+
+        // Initialize content panel
         contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout());
-        add(contentPanel, BorderLayout.CENTER);
+
+        // Add the content panel to the frame
+        add(contentPanel);
+
+        // Add action listeners to menu items
+        MainController controller = new MainController(this, password);
+        addEmployeeItem.addActionListener(controller);
+        updateEmployeeItem.addActionListener(controller);
+        deleteEmployeeItem.addActionListener(controller);
+        viewEmployeeItem.addActionListener(controller);
+        listEmployeesItem.addActionListener(controller);
+
+        salaryReportItem.addActionListener(controller);
+        positionCountReportItem.addActionListener(controller);
     }
 
-    // Method to replace the current content panel with a new panel
-    public void setContentPanel(JPanel panel) {
-        contentPanel.removeAll(); // Remove existing components
-        contentPanel.add(panel, BorderLayout.CENTER); // Add the new panel
-        contentPanel.revalidate(); // Refresh the layout
-        contentPanel.repaint(); // Repaint to apply changes
-    }
-
-    // Getters for the menu items
+    // Getters for menu items (to be used in the controller)
     public JMenuItem getAddEmployeeItem() {
         return addEmployeeItem;
     }
@@ -79,6 +94,10 @@ public class MainView extends JFrame {
         return viewEmployeeItem;
     }
 
+    public JMenuItem getListEmployeesItem() {
+        return listEmployeesItem;
+    }
+
     public JMenuItem getSalaryReportItem() {
         return salaryReportItem;
     }
@@ -87,7 +106,11 @@ public class MainView extends JFrame {
         return positionCountReportItem;
     }
 
-    public JMenuItem getListAllEmployeesItem() {
-        return listAllEmployeesItem;
+    // Method to update the content panel with new views
+    public void setContentPanel(JPanel newPanel) {
+        contentPanel.removeAll();
+        contentPanel.add(newPanel, BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
     }
 }

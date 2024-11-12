@@ -1,3 +1,5 @@
+// src/controller/SalaryReportController.java
+
 package controller;
 
 import model.Employee;
@@ -11,9 +13,9 @@ public class SalaryReportController {
     private SalaryReportView salaryReportView;
     private EmployeeDAO employeeDAO;
 
-    public SalaryReportController(SalaryReportView salaryReportView) {
+    public SalaryReportController(SalaryReportView salaryReportView, String password) {
         this.salaryReportView = salaryReportView;
-        this.employeeDAO = new EmployeeDAO();
+        this.employeeDAO = new EmployeeDAO(password);
         loadSalaryReport();
     }
 
@@ -24,11 +26,11 @@ public class SalaryReportController {
 
         for (Employee emp : employees) {
             Object[] rowData = {
-                emp.getEmployeeId(),
-                emp.getFirstName(),
-                emp.getLastName(),
-                emp.getPosition(),
-                emp.getSalary()
+                    emp.getEmployeeId(),
+                    emp.getFirstName(),
+                    emp.getLastName(),
+                    emp.getPosition(),
+                    emp.getSalary()
             };
             tableModel.addRow(rowData);
         }

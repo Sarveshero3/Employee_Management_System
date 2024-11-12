@@ -1,10 +1,12 @@
+// src/controller/LoginController.java
+
 package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import model.UserDAO;
 import view.LoginView;
-import view.LoadingScreen;
+import view.SetPasswordView;
 import view.MainView;
 
 import javax.swing.JOptionPane;
@@ -17,29 +19,30 @@ public class LoginController implements ActionListener {
     public LoginController(LoginView loginView) {
         this.loginView = loginView;
         this.userDAO = new UserDAO();
+
+        if (userDAO.isFirstRun()) {
+            SwingUtilities.invokeLater(() -> {
+                SetPasswordView setPasswordView = new SetPasswordView();
+                setPasswordView.setVisible(true);
+                loginView.dispose();
+            });
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String username = loginView.getUsername();
         String password = loginView.getPassword();
 
-        if (userDAO.authenticateUser(username, password)) {
+        if (userDAO.authenticateUser(password)) {
             JOptionPane.showMessageDialog(loginView, "Login Successful!");
-            loginView.setVisible(false); // Close the login window
-
-            // Launch Loading Screen
-            LoadingScreen loadingScreen = new LoadingScreen();
-            loadingScreen.showLoading();
-
-            // Show the Main Application Window
+            // Open the main application window
             SwingUtilities.invokeLater(() -> {
-                MainView mainView = new MainView();
-                new MainController(mainView);
+                MainView mainView = new MainView(password);
                 mainView.setVisible(true);
             });
+            loginView.dispose(); // Close the login window
         } else {
-            JOptionPane.showMessageDialog(loginView, "Invalid username or password.");
+            JOptionPane.showMessageDialog(loginView, "Invalid password.");
         }
     }
 }

@@ -1,44 +1,37 @@
+// src/model/UserDAO.java
+
 package model;
 
-import java.sql.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.File;
 
 public class UserDAO {
-    private Connection conn;
+    private static final String FILE_NAME = "EmployeeData.xlsx";
 
-    public UserDAO() {
-        conn = DBConnection.getConnection();
+    public boolean isFirstRun() {
+        File file = new File(FILE_NAME);
+        return !file.exists();
     }
 
-    public boolean authenticateUser(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
-        try {
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, username);
-            stmt.setString(2, hashPassword(password)); // Hash the input password
-            ResultSet rs = stmt.executeQuery();
-            return rs.next(); // Returns true if user exists
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public boolean authenticateUser(String password) {
+        if (password == null || password.isEmpty()) {
+            return false;
         }
-        return false;
+        try {
+            EmployeeDAO employeeDAO = new EmployeeDAO(password);
+            employeeDAO.getAllEmployees(); // Try to read data
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    // Method to hash the password using SHA-256
-    private String hashPassword(String password) {
+    public boolean setPassword(String password) {
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hashedBytes = md.digest(password.getBytes());
-            // Convert byte array into signum representation
-            StringBuilder sb = new StringBuilder();
-            for (byte b : hashedBytes) {
-                sb.append(String.format("%02x", b));
-            }
-            return sb.toString();
-        } catch (NoSuchAlgorithmException e) {
+            EmployeeDAO employeeDAO = new EmployeeDAO(password);
+            return employeeDAO.saveEmployees(new java.util.ArrayList<>());
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return null;
     }
 }

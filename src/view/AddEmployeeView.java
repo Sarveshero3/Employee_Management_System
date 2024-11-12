@@ -1,137 +1,155 @@
+// src/view/AddEmployeeView.java
+
 package view;
 
 import javax.swing.*;
 import java.awt.*;
+import controller.AddEmployeeController;
 
 public class AddEmployeeView {
     private JPanel panel;
-    private JTextField firstNameField, lastNameField, positionField, salaryField, dateOfJoiningField;
-    private JTextField emailField, phoneNumberField, addressField, emergencyContactNameField, emergencyContactPhoneField;
-    private JButton saveButton;
+    private JTextField firstNameField;
+    private JTextField lastNameField;
+    private JTextField positionField;
+    private JTextField salaryField;
+    private JTextField dateOfJoiningField;
+    private JTextField emailField;
+    private JTextField phoneNumberField;
+    private JTextField addressField;
+    private JTextField emergencyContactNameField;
+    private JTextField emergencyContactPhoneField;
+    private JButton submitButton;
+    private String password;
 
-    public AddEmployeeView() {
-        panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(245, 245, 245)); // Light Gray Background
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(4, 4, 4, 4); // Reduced insets for compactness
+    public AddEmployeeView(String password) {
+        this.password = password;
+        panel = new JPanel();
+        panel.setLayout(new GridLayout(11, 2, 10, 10));
 
-        // Define Fonts
-        Font labelFont = new Font("Arial", Font.BOLD, 16); // Increased font size
-        Font fieldFont = new Font("Arial", Font.PLAIN, 16);
+        // Initialize components
+        firstNameField = new JTextField(20);
+        lastNameField = new JTextField(20);
+        positionField = new JTextField(20);
+        salaryField = new JTextField(20);
+        dateOfJoiningField = new JTextField(20); // Use yyyy-mm-dd format
+        emailField = new JTextField(20);
+        phoneNumberField = new JTextField(20);
+        addressField = new JTextField(20);
+        emergencyContactNameField = new JTextField(20);
+        emergencyContactPhoneField = new JTextField(20);
+        submitButton = new JButton("Add Employee");
 
-        int row = 0;
+        // Add components to panel
+        panel.add(new JLabel("First Name:"));
+        panel.add(firstNameField);
+        panel.add(new JLabel("Last Name:"));
+        panel.add(lastNameField);
+        panel.add(new JLabel("Position:"));
+        panel.add(positionField);
+        panel.add(new JLabel("Salary:"));
+        panel.add(salaryField);
+        panel.add(new JLabel("Date of Joining (yyyy-mm-dd):"));
+        panel.add(dateOfJoiningField);
+        panel.add(new JLabel("Email:"));
+        panel.add(emailField);
+        panel.add(new JLabel("Phone Number:"));
+        panel.add(phoneNumberField);
+        panel.add(new JLabel("Address:"));
+        panel.add(addressField);
+        panel.add(new JLabel("Emergency Contact Name:"));
+        panel.add(emergencyContactNameField);
+        panel.add(new JLabel("Emergency Contact Phone:"));
+        panel.add(emergencyContactPhoneField);
+        panel.add(new JLabel());
+        panel.add(submitButton);
 
-        // First Name
-        addLabelAndField("First Name:", firstNameField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Last Name
-        addLabelAndField("Last Name:", lastNameField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Position
-        addLabelAndField("Position:", positionField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Salary
-        addLabelAndField("Salary:", salaryField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Date of Joining
-        addLabelAndField("Date of Joining (yyyy-mm-dd):", dateOfJoiningField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Email
-        addLabelAndField("Email:", emailField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Phone Number
-        addLabelAndField("Phone Number:", phoneNumberField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Address
-        addLabelAndField("Address:", addressField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Emergency Contact Name
-        addLabelAndField("Emergency Contact Name:", emergencyContactNameField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-        // Emergency Contact Phone
-        addLabelAndField("Emergency Contact Phone:", emergencyContactPhoneField = new JTextField(12), row++, labelFont, fieldFont, gbc);
-
-        // Save Button
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        saveButton = new JButton("Save");
-        saveButton.setFont(new Font("Arial", Font.BOLD, 16));
-        saveButton.setBackground(new Color(100, 149, 237)); // Cornflower blue
-        saveButton.setForeground(Color.WHITE);
-        panel.add(saveButton, gbc);
-
-        // Add padding around the panel content
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // Add action listener
+        AddEmployeeController controller = new AddEmployeeController(this, password);
+        submitButton.addActionListener(controller);
     }
 
-    private void addLabelAndField(String labelText, JTextField textField, int row, Font labelFont, Font fieldFont, GridBagConstraints gbc) {
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        JLabel label = new JLabel(labelText);
-        label.setFont(labelFont);
-        panel.add(label, gbc);
-
-        gbc.gridx = 1;
-        textField.setFont(fieldFont);
-        panel.add(textField, gbc);
-    }
-
-    // Getter for the main panel
     public JPanel getPanel() {
         return panel;
     }
 
-    // Getter for the save button
-    public JButton getSaveButton() {
-        return saveButton;
-    }
-
-    // Getter methods for each field
+    // Getters for input fields
     public String getFirstName() {
         return firstNameField.getText();
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstNameField.setText(firstName);
     }
 
     public String getLastName() {
         return lastNameField.getText();
     }
 
+    public void setLastName(String lastName) {
+        this.lastNameField.setText(lastName);
+    }
+
     public String getPosition() {
         return positionField.getText();
+    }
+
+    public void setPosition(String position) {
+        this.positionField.setText(position);
     }
 
     public String getSalary() {
         return salaryField.getText();
     }
 
+    public void setSalary(String salary) {
+        this.salaryField.setText(salary);
+    }
+
     public String getDateOfJoining() {
         return dateOfJoiningField.getText();
+    }
+
+    public void setDateOfJoining(String dateOfJoining) {
+        this.dateOfJoiningField.setText(dateOfJoining);
     }
 
     public String getEmail() {
         return emailField.getText();
     }
 
+    public void setEmail(String email) {
+        this.emailField.setText(email);
+    }
+
     public String getPhoneNumber() {
         return phoneNumberField.getText();
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumberField.setText(phoneNumber);
     }
 
     public String getAddress() {
         return addressField.getText();
     }
 
+    public void setAddress(String address) {
+        this.addressField.setText(address);
+    }
+
     public String getEmergencyContactName() {
         return emergencyContactNameField.getText();
+    }
+
+    public void setEmergencyContactName(String emergencyContactName) {
+        this.emergencyContactNameField.setText(emergencyContactName);
     }
 
     public String getEmergencyContactPhone() {
         return emergencyContactPhoneField.getText();
     }
 
-    // Method to clear the form after adding an employee
-    public void clearForm() {
-        firstNameField.setText("");
-        lastNameField.setText("");
-        positionField.setText("");
-        salaryField.setText("");
-        dateOfJoiningField.setText("");
-        emailField.setText("");
-        phoneNumberField.setText("");
-        addressField.setText("");
-        emergencyContactNameField.setText("");
-        emergencyContactPhoneField.setText("");
+    public void setEmergencyContactPhone(String emergencyContactPhone) {
+        this.emergencyContactPhoneField.setText(emergencyContactPhone);
     }
 }
